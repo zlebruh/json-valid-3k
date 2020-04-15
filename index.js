@@ -193,6 +193,10 @@ class Validator {
       const { type, children } = rule;
       const sameType = Validator.matchType(item, type);
 
+      if (!Tools.is(value) && rule.optional === true) {
+        continue;
+      }
+
       if (sameType) {
         if (type === 'Object') {
           const subBranch = Validator.doBranch(item, rule.props);
