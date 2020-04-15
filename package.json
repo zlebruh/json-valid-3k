@@ -1,6 +1,6 @@
 {
   "name": "json-valid-3k",
-  "version": "1.0.0",
+  "version": "1.0.1a",
   "description": "Not now",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zlebruh/json-validator.git"
+    "url": "git+https://github.com/zlebruh/json-valid-3k.git"
   },
   "keywords": [
     "json",
@@ -18,7 +18,7 @@
   "author": "zlebruh <code@battlebroyale.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zlebruh/json-validator/issues"
+    "url": "https://github.com/zlebruh/json-valid-3k/issues"
   },
-  "homepage": "https://github.com/zlebruh/json-validator#readme"
+  "homepage": "https://github.com/zlebruh/json-valid-3k#readme"
 }

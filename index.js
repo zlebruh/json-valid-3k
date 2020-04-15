@@ -226,4 +226,4 @@ class Validator {
   }
 }
 
-exports.printMsg = Validator;
+exports.validate = Validator.validate;
