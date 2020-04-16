@@ -193,7 +193,7 @@ class Validator {
       const { type, children } = rule;
       const sameType = Validator.matchType(item, type);
 
-      if (!Tools.is(value) && rule.optional === true) {
+      if (!Tools.is(item) && rule.optional === true) {
         continue;
       }
 
