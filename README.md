@@ -3,7 +3,7 @@ A simple tool for validating complex JSON structures
 
 ### Usage
 ```javascript
-import Validator
+const Validator = require('json-valid-3k');
 
 const a_data = {
   a: 'kisk',
@@ -47,4 +47,11 @@ const a_schema = {
 };
 
 const result = Validator.validate(a_data, a_schema);
+// result = {
+//   valid: true, // OR false
+//   {YOUR_OBJECT_PROPS},
+// }
 ```
+
+## Important
+You can used the **valid** property to determine wheter everything's fine but you can also dig deep in the structure to determine what, exactly, went wrong.
