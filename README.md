@@ -1,14 +1,66 @@
 # json-validator
 A simple tool for validating complex JSON structures
 
-### Usage
+## Types
+```JSON
+01. Array
+02. Boolean
+03. Element
+04. Function
+05. Number
+06. Object
+07. String
+08. URL
+09. ValidEmail
+10. ValidIP
+```
+
+## Usage - simple
+```javascript
+const Validator = require('json-valid-3k');
+
+const CFG_SIMPLE = {
+  arr: [],                            // 01. Array
+  boo: true,                          // 02. Boolean
+  elm: document.createElement('div'), // 03. Element
+  fun: () => {},                      // 04. Function
+  num: 3,                             // 05. Number
+  obj: {},                            // 06. Object
+  str: 'High quality string',         // 07. String
+  url: 'https://some.place.com',      // 08. URL
+  mail: 'a@b.c',                      // 09. ValidEmail
+  ip: '192.168.0.251',                // 10. ValidIP
+  def: null,                          // 11. null
+};
+const SCHEMA_SIMPLE = {
+  arr: { type: 'Array' },
+  boo: { type: 'Boolean' },
+  elm: { type: 'Element' },
+  fun: { type: 'Function' },
+  num: { type: 'Number' },
+  obj: { type: 'Object' },
+  str: { type: 'String' },
+  url: { type: 'URL' },
+  mail: { type: 'ValidEmail' },
+  ip: { type: 'ValidIP' },
+  def: { type: null },
+};
+
+const test = Validator.validate(CFG_SIMPLE, SCHEMA_SIMPLE);
+// test = {
+//   valid: true, // OR false
+//   tree: { YOUR_OBJECT_PROPS / ERRORS }, 
+// }
+```
+
+## Usage - deep nesting
 ```javascript
 const Validator = require('json-valid-3k');
 
 const a_data = {
   a: 'kisk',
   b: {
-    duck: '123',
+    duck: 123,
     bb: 123,
     xx: {
       q: [
@@ -30,13 +82,13 @@ const a_schema = {
       duck: { type: 'String', optional: true },
       bb: { type: 'Number', optional: false },
       xx: {
-        type: 'Object', props: {
+        type: 'Object',
+        props: {
           q: {
             type: 'Array',
             children: {
-              type: 'Object', props: {
-                qub: { type: 'Number' }
-              }
+              type: 'Object',
+              props: { qub: { type: 'Number' } }
             }
           }
         }
@@ -46,12 +98,20 @@ const a_schema = {
   d: { type: 'Function' }
 };
 
-const result = Validator.validate(a_data, a_schema);
-// result = {
-//   valid: true, // OR false
-//   {YOUR_OBJECT_PROPS},
+const test = Validator.validate(a_data, a_schema);
+// test = {
+//   valid: false, // OR true
+//   tree: {
+//     a: "kisk"
+//     b:
+//     bb: 123
+//     duck: "ERROR: Value [123] does not match type [String]"
+//     xx: {q: Array(2)}
+//     c: ["Dingo"]
+//     d: () => ({})
+//   }, 
 // }
 ```
 
 ## Important
-You can used the **valid** property to determine wheter everything's fine but you can also dig deep in the structure to determine what, exactly, went wrong.
+You can used the **valid** property to determine wheter everythings fine but you can also dig deep in the structure to determine what exactly went wrong.

@@ -1,6 +1,6 @@
 {
   "name": "json-valid-3k",
-  "version": "1.0.1e",
+  "version": "1.0.1f",
   "description": "Not now",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,8 @@
   "homepage": "https://github.com/zlebruh/json-valid-3k#readme",
   "devDependencies": {
     "jest": "^26.0.1"
+  },
+  "dependencies": {
+    "zletools": "^1.0.0-d"
   }
 }
