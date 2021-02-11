@@ -70,14 +70,18 @@ class Validator {
     for (let i = 0; i < keys.length; i += 1) {
       const key = keys[i];
       const rule = rules[key];
-      const item = branch[key];
       const { type, children } = rule;
-      const sameType = Validator.matchType(item, type);
+      let item = branch[key];
 
-      if (!Tools.is(item) && rule.optional === true) {
-        continue;
+      if (!Tools.is(item)) {
+        if (rule.optional === true) continue;
+
+        if (rule.default) {
+          item = rule.default;
+        }
       }
 
+      const sameType = Validator.matchType(item, type);
       if (sameType) {
         if (type === 'Object') {
           const subBranch = Validator.doBranch(item, rule.props);

@@ -113,5 +113,15 @@ const test = Validator.validate(a_data, a_schema);
 // }
 ```
 
+## Additional Schema Options
+```javascript
+{
+  // ...Some props
+  optional: Boolean, // Overrides default value, if any
+  default: 'Something', // This could be literally anything
+  // Thhe value is only assigned if the property is missing in the data structure
+}
+```
+
 ## Important
 You can used the **valid** property to determine wheter everythings fine but you can also dig deep in the structure to determine what exactly went wrong.
