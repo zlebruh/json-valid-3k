@@ -76,7 +76,7 @@ class Validator {
       if (!Tools.is(item)) {
         if (rule.optional === true) continue;
 
-        if (rule.default) {
+        if (Tools.is(rule.default)) {
           item = rule.default;
         }
       }

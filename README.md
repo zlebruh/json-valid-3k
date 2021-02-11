@@ -119,7 +119,7 @@ const test = Validator.validate(a_data, a_schema);
   // ...Some props
   optional: Boolean, // Overrides default value, if any
   default: 'Something', // This could be literally anything
-  // Thhe value is only assigned if the property is missing in the data structure
+  // The value is only assigned if the property is missing in the data structure
 }
 ```
 
