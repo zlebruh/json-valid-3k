@@ -2,6 +2,17 @@ const Tools = require('zletools');
 
 // Local
 /**
+ * @param {Object|String}} rule
+ * @returns {{type: null|String, props: *, children: * }}
+ */
+function extract(rule) {
+  if (rule === null) return { type: null };
+
+  const type = rule.hasOwnProperty('type') ? rule.type : rule;
+  return Object.assign(rule, { type });
+}
+
+/**
  * @param {*} value
  * @param {String} type
  * @returns {String}
@@ -17,14 +28,14 @@ function typeError(value, type) {
  */
 function checkArray(arr, children) {
   const clone = [];
-  const { type, props } = children;
+  const { type, props } = extract(children);
   let valid = true;
 
   for (let i = 0; i < arr.length; i += 1) {
     const item = arr[i];
-    const typeMatch = Tools.getType(item) === type;
+    const sameType = matchType(item, type);
 
-    if (typeMatch) {
+    if (sameType) {
       if (props) {
         const branch = doBranch(item, props);
         if (!branch.valid) {
@@ -58,8 +69,9 @@ function doBranch(branch, rules = {}) {
 
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
-    const rule = rules[key];
+    const rule = extract(rules[key]);
     const { type, children } = rule;
+
     let item = branch[key];
 
     if (!Tools.is(item)) {
@@ -115,7 +127,7 @@ function matchType(value, type, checkEmpty = false) {
 /**
  * @param {Object} cfg
  * @param {Object} schema
- * @returns {{valid: boolean, tree: Object}}
+ * @returns {{valid: Boolean, tree: Object}}
  */
 function validate(cfg, schema) {
   Tools.checkForNumberOfArguments(2, [cfg, schema]);

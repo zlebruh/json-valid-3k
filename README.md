@@ -35,17 +35,17 @@ const CFG_SIMPLE = {
   def: null,                          // 11. null
 };
 const SCHEMA_SIMPLE = {
-  arr: { type: 'Array' },
-  boo: { type: 'Boolean' },
-  elm: { type: 'Element' },
-  fun: { type: 'Function' },
-  num: { type: 'Number' },
-  obj: { type: 'Object' },
-  str: { type: 'String' },
-  url: { type: 'URL' },
-  mail: { type: 'ValidEmail' },
-  ip: { type: 'ValidIP' },
-  def: { type: null },
+  arr: 'Array',       // { type: 'Array' },
+  boo: 'Boolean',     // { type: 'Boolean' },
+  elm: 'Element',     // { type: 'Element' },
+  fun: 'Function',    // { type: 'Function' },
+  num: 'Number',      // { type: 'Number' },
+  obj: 'Object',      // { type: 'Object' },
+  str: 'String',      // { type: 'String' },
+  url: 'URL',         // { type: 'URL' },
+  mail: 'ValidEmail', // { type: 'ValidEmail' },
+  ip: 'ValidIP',      // { type: 'ValidIP' },
+  def: null,          // { type: null },
 };
 
 const test = validate(CFG_SIMPLE, SCHEMA_SIMPLE);
