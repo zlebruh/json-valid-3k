@@ -1,5 +1,5 @@
-# json-validator
-A simple tool for validating complex JSON structures
+# zlevidation
+Validate or generate JSON-like structures with schemas
 
 ## Types
 ```JSON
@@ -19,7 +19,7 @@ A simple tool for validating complex JSON structures
 ```javascript
 import { validate } from 'json-valid-3k';
 // OR
-// const { validate } = require('json-valid-3k');;
+// const { validate } = require('json-valid-3k');
 
 const CFG_SIMPLE = {
   arr: [],                            // 01. Array
@@ -76,6 +76,8 @@ The `tree` object discards everything from the source object that is not in the 
   // ...Some props
   optional: Boolean,
   default: 'Something', // Has to match the type. NOT applied when "optional" is "true"
+  allowEmpty: Boolean, // Default value is true. Using false fails empty Array/Object/String values
+  silentDrop: Boolean, // Default value is false. Using true drops failed items without raising the alarm
 }
 ```
 
