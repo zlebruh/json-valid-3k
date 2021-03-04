@@ -1,4 +1,4 @@
-# zlevidation
+# json-valid-3k
 Validate or generate JSON-like structures with schemas
 
 ## Types

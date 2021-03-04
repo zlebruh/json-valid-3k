@@ -12,7 +12,7 @@ function doItem(item, ruleValue) {
   if (itemType !== type) {
     if (rule.optional === true) return new SkipItem;
 
-    const defaultOK = rule.hasOwnProperty('default') && isType(rule.default, type);
+    const defaultOK = ('default' in rule) && is(item) && isType(rule.default, type);
     result = defaultOK
       ? { valid: true, item: rule.default }
       : { valid: false, item: getError(item, type) };

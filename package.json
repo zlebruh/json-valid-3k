@@ -1,6 +1,6 @@
 {
   "name": "json-valid-3k",
-  "version": "1.1.0a",
+  "version": "1.1.0b",
   "description": "A simple tool for validating complex JSON structures",
   "main": "src/index.js",
   "scripts": {
@@ -27,6 +27,6 @@
     "jest": "^26.6.3"
   },
   "dependencies": {
-    "zletils": "^0.0.1-a"
+    "zletils": "^0.0.1-c"
   }
 }
