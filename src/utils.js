@@ -39,6 +39,6 @@ export function matchType(itemType, ruleType) {
 
   return {
     TYPE: ruleType,
-    match: itemType !== ruleType,
+    match: itemType === ruleType,
   };
 }
