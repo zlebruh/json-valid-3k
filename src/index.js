@@ -1,32 +1,32 @@
 import { is, isType, getType, throwUnexpectedType } from 'zletils';
-import { extract, getError, invalidEmpty } from './utils';
+import { extract, getError, matchType, invalidEmpty } from './utils';
 
 class SkipItem {};
 
 function doItem(item, ruleValue) {
   let result = { valid: true, item };
   const rule = extract(ruleValue);
-  const { type, props, children } = rule;
-  let itemType = getType(item);
+  const itemType = getType(item);
+  const { TYPE, match } = matchType(itemType, rule.type);
 
-  if (itemType !== type) {
+  if (!match) {
     if (rule.optional === true) return new SkipItem;
 
-    const defaultOK = ('default' in rule) && !is(item) && isType(rule.default, type);
+    const defaultOK = ('default' in rule) && !is(item) && isType(rule.default, TYPE);
     result = defaultOK
       ? { valid: true, item: rule.default }
-      : { valid: false, item: getError(item, type) };
+      : { valid: false, item: getError(item, TYPE) };
   }
 
   if (invalidEmpty(item, rule, itemType)) {
     return rule.silentDrop === true
       ? new SkipItem
-      : { valid: false, item: getError(item, type, true) };
+      : { valid: false, item: getError(item, TYPE, true) };
   }
 
-  if (itemType === 'Array' && is(children)) result = doArray(item, children);
-  if (itemType === 'Object' && isType(props, 'Object')) {
-    const branch = doBranch(item, props);
+  if (itemType === 'Array' && is(rule.children)) result = doArray(item, rule.children);
+  if (itemType === 'Object' && isType(rule.props, 'Object')) {
+    const branch = doBranch(item, rule.props);
     result = { valid: branch.valid, item: branch.tree };
   }
 

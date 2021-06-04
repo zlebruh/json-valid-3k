@@ -28,3 +28,17 @@ export function getError(value, rule, isEmptyError = false) {
     ? `ERROR: Value ${textValue} does not match type ${rule}`
     : `ERROR: Value ${textValue} of type ${getType(value)} is not allowed to be empty`;
 }
+
+export function matchType(itemType, ruleType) {
+  if (Array.isArray(ruleType)) {
+    const item = ruleType.find((v) => v === itemType);
+    const match = itemType === item;
+    const TYPE = match ? item : ruleType;
+    return { TYPE, match };
+  }
+
+  return {
+    TYPE: ruleType,
+    match: itemType !== ruleType,
+  };
+}

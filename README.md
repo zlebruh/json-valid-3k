@@ -55,6 +55,17 @@ const test = validate(CFG_SIMPLE, SCHEMA_SIMPLE);
 // }
 ```
 
+## Multiple possible types per value
+Every value can be targeted via one or more rule types
+```javascript
+const SCHEMA_MULTIPLE = {
+  aaa: 'Array',
+  bbb: ['Array', 'Number'],
+  ccc: ['String', 'Object', null]
+};
+```
+
+
 ## Validation object
 The validation object has a fairly simple structrure
 ```javascript
