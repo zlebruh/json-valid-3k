@@ -7,15 +7,21 @@ function doItem(item, ruleValue) {
   let result = { valid: true, item };
   const rule = extract(ruleValue);
   const itemType = getType(item);
-  const { TYPE, match } = matchType(itemType, rule.type);
+  const { TYPE, match } = matchType(item, rule.type);
+
+  if (rule.optional === true && !is(item)) return new SkipItem;
 
   if (!match) {
-    if (rule.optional === true) return new SkipItem;
-
-    const defaultOK = ('default' in rule) && !is(item) && isType(rule.default, TYPE);
-    result = defaultOK
-      ? { valid: true, item: rule.default }
-      : { valid: false, item: getError(item, TYPE) };
+    // Deal with default rule values
+    if (('default' in rule) && !is(item)) {
+      const value = rule.default
+      const valid = isType(value, TYPE);
+      result = valid
+        ? { valid, item: value }
+        : { valid, item: getError(value, TYPE) };
+    } else {
+      result = { valid: false, item: getError(item, TYPE) };
+    }
   }
 
   if (invalidEmpty(item, rule, itemType)) {
@@ -75,19 +81,23 @@ function doBranch(branch, rules = {}) {
 }
 
 // Exported
-export function validate(object, schema, logError) {
+export function validate(data, schema, logError) {
   const type = 'Object';
 
-  if (!isType(object, type)) { throwUnexpectedType(object, {}, 'object'); }
+  if (!isType(data, type)) { throwUnexpectedType(data, {}, 'data'); }
   if (!isType(schema, type)) { throwUnexpectedType(schema, {}, 'schema'); }
 
-  const validation = doBranch(object, schema);
+  const validation = doBranch(data, schema);
 
   if (logError === true && !validation.valid) {
     console.error('ERROR: The params[0] do not match the schema[1]')
-    console.error(`[0] Params:`, object);
+    console.error(`[0] Params:`, data);
     console.error(`[1] Schema:`, schema);
   }
 
   return validation;
+}
+
+export default {
+  validate,
 }

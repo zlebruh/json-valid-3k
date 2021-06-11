@@ -1,4 +1,4 @@
-import { getType } from 'zletils';
+import { isType, getType } from 'zletils';
 
 export function extract(rule) {
   if (rule === null) return { type: null };
@@ -29,16 +29,16 @@ export function getError(value, rule, isEmptyError = false) {
     : `ERROR: Value ${textValue} of type ${getType(value)} is not allowed to be empty`;
 }
 
-export function matchType(itemType, ruleType) {
+export function matchType(value, ruleType) {
   if (Array.isArray(ruleType)) {
-    const item = ruleType.find((v) => v === itemType);
-    const match = itemType === item;
+    const item = ruleType.find((v) => isType(value, v));
+    const match = isType(value, item)
     const TYPE = match ? item : ruleType;
     return { TYPE, match };
   }
 
   return {
     TYPE: ruleType,
-    match: itemType === ruleType,
+    match: isType(value, ruleType)
   };
 }
