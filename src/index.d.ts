@@ -1,6 +1,27 @@
 declare module 'json-valid-3k' {
-  function doItem(item: any, ruleValue: Object | String): {valid: Boolean, item: any}
-  function doArray(arr: any[], rule: Object | String): {valid: Boolean, item: any[]};
-  function doBranch(branch: Object, rules: Object): {valid: Boolean, tree: Object};
-  export function validate(object: Object, schema: Object, logError: Boolean): {valid: Boolean, tree: Object};
+  interface Obj {
+    [key: string]: {
+      [key: string]: unknown
+    }
+  }
+  interface ValidationResponse {
+    valid: boolean
+    tree: Obj
+    dropped: Map
+    errors: Map
+  }
+  interface RuleInterface {
+    type: string
+    props: { [key: string]: Rule }
+    children: { [key: string]: Rule }
+    optional?: boolean
+    default?: unknown
+    allowEmpty?: boolean
+    silentDrop?: boolean
+  }
+  type Rule = string | RuleInterface
+  type Rules = { [key: string]: Rule }
+
+  export function validate(object: Obj, schema: Obj): ValidationResponse
+  export const types: Map<K, V>
 }
