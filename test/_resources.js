@@ -48,7 +48,8 @@ export const SCHEMA_2 = {
       duck: { type: 'String', optional: true },
       bb: { type: 'Number', optional: false },
       xx: {
-        type: 'Object', props: {
+        type: 'Object',
+        props: {
           q: {
             type: 'Array',
             children: {

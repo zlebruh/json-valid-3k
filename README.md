@@ -17,9 +17,9 @@ Validate or generate JSON-like structures with schemas
 
 ## Usage - simple
 ```javascript
-import { validate } from 'json-valid-3k';
+import { validate } from 'json-valid-3k'
 // OR
-// const { validate } = require('json-valid-3k');
+// const { validate } = require('json-valid-3k')
 
 const CFG_SIMPLE = {
   arr: [],                            // 01. Array
@@ -33,7 +33,7 @@ const CFG_SIMPLE = {
   mail: 'a@b.c',                      // 09. ValidEmail
   ip: '192.168.0.251',                // 10. ValidIP
   def: null,                          // 11. null
-};
+}
 const SCHEMA_SIMPLE = {
   arr: 'Array',       // { type: 'Array' },
   boo: 'Boolean',     // { type: 'Boolean' },
@@ -46,13 +46,18 @@ const SCHEMA_SIMPLE = {
   mail: 'ValidEmail', // { type: 'ValidEmail' },
   ip: 'ValidIP',      // { type: 'ValidIP' },
   def: null,          // { type: null },
-};
+}
 
-const test = validate(CFG_SIMPLE, SCHEMA_SIMPLE);
-// test = {
-//   valid: true, // OR false
-//   tree: { YOUR_OBJECT_PROPS / ERRORS }, 
-// }
+const test = validate(CFG_SIMPLE, SCHEMA_SIMPLE)
+```
+### Validation response object
+```typescript
+{
+  valid: boolean
+  tree: { YOUR_OBJECT_PROPS / ERRORS },
+  errors: Map<K, V>  // A flat list displaying the exact depth position of each failed value
+  dropped: Map<K, V> // Shows the errors for silently dropped items (silentDrop: true)
+}
 ```
 
 ## Multiple possible types per value
@@ -62,7 +67,7 @@ const SCHEMA_MULTIPLE = {
   aaa: 'Array',
   bbb: ['Array', 'Number'],
   ccc: ['String', 'Object', null]
-};
+}
 ```
 
 
@@ -87,8 +92,8 @@ The `tree` object discards everything from the source object that is not in the 
   // ...Some props
   optional: Boolean,
   default: 'Something', // Has to match the type. NOT applied when "optional" is "true"
-  allowEmpty: Boolean, // Default value is true. Using false fails empty Array/Object/String values
-  silentDrop: Boolean, // Default value is false. Using true drops failed items without raising the alarm
+  allowEmpty: Boolean,  // Default value is true. Using false fails empty Array/Object/String values
+  silentDrop: Boolean,  // Default value is false. Using true drops failed items without raising the alarm
 }
 ```
 
@@ -96,7 +101,7 @@ The `tree` object discards everything from the source object that is not in the 
 
 ## Usage - deep nesting
 ```javascript
-import { validate } from 'json-valid-3k';
+import { validate } from 'json-valid-3k'
 
 const a_data = {
   a: 'kisk',
@@ -120,7 +125,7 @@ const a_data = {
   },
   c: ['Dingo'],
   d: () => ({}),
-};
+}
 const a_schema = {
   a: { type: 'String', optional: true },
   c: { type: 'Array', optional: false },
@@ -157,9 +162,9 @@ const a_schema = {
     },
   },
   d: { type: 'Function' }
-};
+}
 
-const test = validate(a_data, a_schema);
+const test = validate(a_data, a_schema)
 test = {
   valid: false, // OR true
   tree: {
