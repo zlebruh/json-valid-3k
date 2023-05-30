@@ -79,7 +79,7 @@ const extract = (rule) => {
 }
 // #######
 
-const validateJSON = (value, rules = {}, path = '') => {
+const validateJSON = (data, rules = {}, path = '') => {
   let valid = true
 
   const validateBranch = (val, valRules, rootKey) => {
@@ -90,19 +90,21 @@ const validateJSON = (value, rules = {}, path = '') => {
     return branch.tree
   }
 
-  if (isArray(value)) {
-    const tree = value.map((v, idx) => validateBranch(v, rules, path + `[${idx}]`), [])
+  if (isArray(data)) {
+    const tree = data.map((v, idx) => validateBranch(v, rules, path + `[${idx}]`), [])
 
     return noProtoOb({ tree, valid })
   }
 
-  const tree = isArray(value) ? [] : noProtoOb()
+  const tree = isArray(data) ? [] : noProtoOb()
 
-  const onErr = (key, rule, type, item, noValue, PATH, sizeErr) => {
+  const onErr = (key, rule, type, item, noValue, PATH, sizeErr, isFnRule) => {
     const textValue = JSON.stringify(item)
-    const error = sizeErr
-      ? `ERROR: Value ${textValue} of type ${type} is not allowed to be empty`
-      : `ERROR: Value ${textValue} does not match type ${type}`
+    const error = isFnRule === true
+      ? `ERROR: Value ${textValue} was not matched by custom function: ${type}`
+      : sizeErr
+        ? `ERROR: Value ${textValue} of type ${type} is not allowed to be empty`
+        : `ERROR: Value ${textValue} does not match type ${type}`
 
     if (rule.optional === true && noValue) return
 
@@ -117,23 +119,26 @@ const validateJSON = (value, rules = {}, path = '') => {
 
   for (const key of Object.keys(rules)) {
     const PATH = `${path}[${key}]`
-    const rule = extract(rules[key])
-    const noValue = !is(value[key])
+    const RULE = rules[key]
+    const VALUE = data[key]
+    const isFnRule = typeof RULE === 'function'
+    const rule = extract(RULE)
+    const noValue = !is(VALUE)
     const useDefault = noValue && is(rule?.default)
-    const item = useDefault ? rule.default : value[key]
+    const item = useDefault ? rule.default : VALUE
     const type = isString(rule) ? rule : rule?.type
-    const match = is(item, type)
     const children = rule?.props || rule?.children?.props || rule?.children
-    const nullSituation = value[key] === null && (rule === null || rule?.type === null)
+    const nullSituation = VALUE === null && (rule === null || rule?.type === null)
+    const match = isFnRule ? RULE(VALUE, data, rules) : is(item, type)
 
     if (match || nullSituation) {
       if (rule?.allowEmpty === false && typeof item !== 'function' && isEmpty(item)) {
-        onErr(key, rule, type, item, noValue, PATH, true)
+        onErr(key, rule, type, item, noValue, PATH, true, isFnRule)
       } else {
         tree[key] = item
       }
     } else {
-      onErr(key, rule, type, item, noValue, PATH)
+      onErr(key, rule, type, item, noValue, PATH, false, isFnRule)
     }
 
     if (children) {

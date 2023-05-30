@@ -133,3 +133,22 @@ describe('Validation - schema options [silentDrop: Boolean]', () => {
     expect(dropped.size).toBe(1)
   })
 })
+
+describe('Validation - functions as rules', () => {
+  it('expect SUCCESS, a.k.a the normal flow', () => {
+    const DATA = {a: [1, 2, 3, 4, 5]}
+    const RULES = {a: (value, data, schema) => Array.isArray(value) && value.length === 5}
+    const { valid, tree } = PROXY(DATA, RULES)
+    expect(valid).toBe(true)
+  })
+
+  it('expect ERROR, a.k.a the normal flow', () => {
+    const DATA = {a: [1, 2, 3, 4, 5]}
+    const RULES = {a: (value, data, schema) => Array.isArray(value) && value.length > 15}
+    const { valid, tree, errors } = PROXY(DATA, RULES)
+    const err = errors.get('[a]')
+    const fn = RULES.a.toString()
+    expect(valid).toBe(false)
+    expect(err.includes(fn)).toBe(true)
+  })
+})
