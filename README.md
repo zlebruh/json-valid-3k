@@ -1,21 +1,41 @@
 # json-valid-3k
 Validate or generate JSON-like structures with schemas
 
-## Types
-```JSON
-01. Array
-02. Boolean
-03. Element
-04. Function
-05. Number
-06. Object
-07. String
-08. URL
-09. ValidEmail
-10. ValidIP
+## Usage - simple
+```javascript
+import { validate } from 'json-valid-3k'
+
+const data = {
+  arr: [],
+  num: 3,
+  str: 'High quality string',
+}
+const schema = {
+  arr: 'Array',
+  num: 'Number',
+  str: 'String',
+}
+
+const test = validate(data, schema)
 ```
 
-## Usage - simple
+## Validation response object
+```typescript
+{
+  valid: boolean
+  tree: { YOUR_OBJECT_PROPS / ERRORS },
+  errors: Map<K, V>  // A flat list displaying the exact depth position of each failed value
+  dropped: Map<K, V> // Shows the errors for silently dropped items (silentDrop: true)
+}
+```
+
+The **`tree`** object stores your output. It contains the relevant **value** OR **error** for each key:value pair.
+<br >
+**Discards everything not in the schema**. The idea is that if you really care about your data integrity, than there's not reason not to use it as opposed to dragging everything esle from your source object.
+
+## &nbsp;
+
+## Usage - expanded
 ```javascript
 import { validate } from 'json-valid-3k'
 // OR
@@ -50,15 +70,55 @@ const SCHEMA_SIMPLE = {
 
 const test = validate(CFG_SIMPLE, SCHEMA_SIMPLE)
 ```
-### Validation response object
-```typescript
-{
-  valid: boolean
-  tree: { YOUR_OBJECT_PROPS / ERRORS },
-  errors: Map<K, V>  // A flat list displaying the exact depth position of each failed value
-  dropped: Map<K, V> // Shows the errors for silently dropped items (silentDrop: true)
-}
+
+## &nbsp;
+
+## Types
+### Predefined Types
+```JSON
+01. Array
+02. Boolean
+03. Element
+04. Function
+05. Number
+06. Object
+07. String
+08. URL
+09. ValidEmail
+10. ValidIP
 ```
+
+### Custom types
+Adding custom types is simple. This is exactly what `json-validate-3k` is using internally for its predefined types.
+```javascript
+import { validate, types } from 'json-valid-3k'
+
+types.set('LongString', (v) => {
+    return typeof v === 'string' && v.length > 255
+})
+```
+
+## Custom functions as rules
+Sometimes even custom type aren't enough and we have to reach for something more.
+
+```javascript
+import { validate } from 'json-valid-3k'
+
+const dataObject = {
+  abc: 'AaBbCc',
+  arr: [1, 2, 3, 4, 5]
+}
+const dataSchema = {
+  abc: 'String',
+  arr: (value, data, schema) => {
+    return Array.isArray(value) && value.length > 3
+  }
+}
+
+// Your validation object
+const { valid, tree, errors, dropped } = validate(dataObject, dataSchema)
+```
+## &nbsp;
 
 ## Multiple possible types per value
 Every value can be targeted via one or more rule types
@@ -69,21 +129,6 @@ const SCHEMA_MULTIPLE = {
   ccc: ['String', 'Object', null]
 }
 ```
-
-
-## Validation object
-The validation object has a fairly simple structrure
-```javascript
-{
-  valid: Boolean,
-  tree: Object,
-}
-```
-1. `valid`: indicates your object's integrity with the schema.
-2. `tree`: this object represents your entire validated tree, as **described in the schema**.
-
-### **Important note about `tree`**
-The `tree` object discards everything from the source object that is not in the schema. The idea is that if you really care about your data integrity, than there's not reason not to use it as opposed to dragging everything esle from your source object.
 
 <br /><hr /><br />
 ## Additional Schema Options
@@ -196,8 +241,3 @@ test = {
   }, 
 }
 ```
-
-## Important
-Use the **`valid`** property to determine your object's integrity with the schema.
-
-The **`tree`** object stores your output. It contains your validates properties OR the relevant errors for each and every problem, as described in the scema.
